@@ -1,0 +1,22 @@
+---
+- name: Configure target server
+  hosts: servers
+  become: yes
+
+  tasks:
+    - name: Install git
+      apt:
+        name: git
+        state: present
+        update_cache: yes
+
+    - name: Create a directory
+      file:
+        path: /home/ansibleuser/project
+        state: directory
+        owner: ansibleuser
+
+    - name: Create a simple config file
+      copy:
+        content: "app_env=development\napp_port=8080\n"
+        dest: /home/ansibleuser/project/config.txt
