@@ -10,6 +10,16 @@
         state: present
         update_cache: yes
 
+    - name: Install python3-pip
+      apt:
+        name: python3-pip
+        state: present
+
+    - name: Install flask
+      pip:
+        name: flask
+        state: present
+
     - name: Create a directory
       file:
         path: /home/ansibleuser/project
@@ -18,5 +28,29 @@
 
     - name: Create a simple config file
       copy:
-        content: "app_env=development\napp_port=8080\n"
+        content: "app_env=development\napp_port=5000\n"
         dest: /home/ansibleuser/project/config.txt
+
+    - name: Backup current app
+      copy:
+        src: /home/ansibleuser/project/app.py
+        dest: /home/ansibleuser/project/app.py.bak
+        remote_src: yes
+      ignore_errors: yes
+
+    - name: Copy app to server
+      copy:
+        src: /var/jenkins_home/app.py
+        dest: /home/ansibleuser/project/app.py
+        owner: ansibleuser
+
+    - name: Copy start script to server
+      copy:
+        src: /var/jenkins_home/start_app.sh
+        dest: /home/ansibleuser/project/start_app.sh
+        mode: '0755'
+        owner: ansibleuser
+
+    - name: Start flask app
+      shell: /home/ansibleuser/project/start_app.sh
+      become_user: ansibleuser

@@ -1,0 +1,11 @@
+---
+- name: Health check
+  hosts: servers
+  become: no
+
+  tasks:
+    - name: Check app is responding
+      uri:
+        url: http://localhost:5000/health
+        return_content: yes
+        status_code: 200

@@ -1,0 +1,19 @@
+---
+- name: Rollback flask app
+  hosts: servers
+  become: yes
+
+  tasks:
+    - name: Stop current app
+      shell: pkill -f "python3 app.py" || true
+      ignore_errors: yes
+
+    - name: Restore previous version
+      copy:
+        src: /var/jenkins_home/app.py.bak
+        dest: /home/ansibleuser/project/app.py
+        owner: ansibleuser
+
+    - name: Restart app with previous version
+      shell: /home/ansibleuser/project/start_app.sh
+      become_user: ansibleuser
