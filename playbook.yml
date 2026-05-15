@@ -40,7 +40,7 @@
 
     - name: Copy app to server
       copy:
-        src: /var/jenkins_home/app.py
+        src: /var/jenkins_home/workspace/ansible-pipeline/app.py
         dest: /home/ansibleuser/project/app.py
         owner: ansibleuser
 
